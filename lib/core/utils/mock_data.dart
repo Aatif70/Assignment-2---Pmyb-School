@@ -7,8 +7,8 @@ import '../theme/colors.dart';
 class MockData {
   static final Student student = Student(
     id: '1',
-    name: 'Arav',
-    avatarAsset: 'assets/avatars/student.png',
+    name: 'Aatif',
+    avatarAsset: 'assets/lottie/user_profile.json',
     attendance: 0.95,
     performance: 0.95,
   );
@@ -17,25 +17,25 @@ class MockData {
     Subject(
       id: 'physics',
       name: 'Physics',
-      iconAsset: 'assets/subjects/physics.png',
+      iconAsset: 'assets/lottie/physics.json',
       color: AppColors.accentBlue,
     ),
     Subject(
       id: 'chemistry',
       name: 'Chemistry',
-      iconAsset: 'assets/subjects/chemistry.png',
+      iconAsset: 'assets/lottie/chemistry.json',
       color: AppColors.accentPurple,
     ),
     Subject(
       id: 'math',
       name: 'Math',
-      iconAsset: 'assets/subjects/math.png',
+      iconAsset: 'assets/lottie/math.json',
       color: AppColors.accentGreen,
     ),
     Subject(
       id: 'science',
       name: 'Science',
-      iconAsset: 'assets/subjects/bio.png',
+      iconAsset: 'assets/lottie/science.json',
       color: AppColors.primaryOrange,
     ),
   ];

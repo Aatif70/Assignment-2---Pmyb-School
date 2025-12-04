@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../models/student.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/text_styles.dart';
@@ -32,10 +33,6 @@ class ProfileCard extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
-              image: DecorationImage(
-                image: AssetImage(student.avatarAsset),
-                fit: BoxFit.cover,
-              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
@@ -43,6 +40,12 @@ class ProfileCard extends StatelessWidget {
                   offset: const Offset(0, 4),
                 ),
               ],
+            ),
+            child: ClipOval(
+              child: Lottie.asset(
+                student.avatarAsset,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           const SizedBox(width: 20),

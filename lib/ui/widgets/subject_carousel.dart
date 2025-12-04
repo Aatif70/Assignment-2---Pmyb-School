@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../models/session.dart';
 import '../../core/utils/mock_data.dart';
 import '../../core/theme/colors.dart';
@@ -65,9 +66,9 @@ class SubjectCarousel extends StatelessWidget {
                 const Spacer(),
                 Row(
                   children: [
-                    Image.asset(
+                    Lottie.asset(
                       subject.iconAsset,
-                      height: 40,
+                      height: 50,
                       errorBuilder: (context, error, stackTrace) => Icon(
                         Icons.book,
                         size: 30,

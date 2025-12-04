@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../models/session.dart';
 import '../../models/subject.dart';
 import '../../core/utils/mock_data.dart';
@@ -84,11 +85,11 @@ class SessionCard extends StatelessWidget {
                 
                 const Spacer(),
                 
-                // Subject Illustration (Placeholder)
+                // Subject Illustration (Lottie)
                 Center(
-                  child: Image.asset(
+                  child: Lottie.asset(
                     subject.iconAsset,
-                    height: 120,
+                    height: 150,
                     errorBuilder: (context, error, stackTrace) => Icon(
                       Icons.science,
                       size: 80,
