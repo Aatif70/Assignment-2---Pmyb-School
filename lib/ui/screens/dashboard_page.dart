@@ -27,6 +27,7 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
   late PageController _pageController;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
+  final GlobalKey _pageViewKey = GlobalKey();
 
   @override
   void initState() {
@@ -154,6 +155,7 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
     return SizedBox(
       height: 320,
       child: PageView.builder(
+        key: _pageViewKey,
         controller: _pageController,
         onPageChanged: (index) => provider.selectSession(index),
         itemCount: provider.sessions.length,
