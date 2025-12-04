@@ -24,34 +24,36 @@ class ButtonCapsule extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.cardWhite : AppColors.softCream,
+          color: isSelected ? AppColors.primaryYellow : Colors.white,
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
-            color: isSelected ? Colors.transparent : Colors.transparent,
+            color: isSelected ? Colors.transparent : Colors.grey.shade200,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  )
-                ]
-              : [],
+          boxShadow: [
+            BoxShadow(
+              color: isSelected 
+                  ? AppColors.primaryYellow.withOpacity(0.4) 
+                  : Colors.black.withOpacity(0.05),
+              blurRadius: isSelected ? 12 : 8,
+              offset: const Offset(0, 4),
+            )
+          ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
               size: 20,
-              color: isSelected ? AppColors.darkText : AppColors.greyText,
+              color: AppColors.darkText,
             ),
             const SizedBox(width: 8),
             Text(
               text,
               style: AppTextStyles.buttonText.copyWith(
-                color: isSelected ? AppColors.darkText : AppColors.greyText,
+                color: AppColors.darkText,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],

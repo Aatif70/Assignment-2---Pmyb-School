@@ -50,7 +50,7 @@ class MockData {
       status: 'Live Now',
       category: 'In class Lecture',
       instructorName: 'Dr. Smith',
-      instructorAvatar: 'assets/avatars/student.png', // Reusing for now
+      instructorAvatar: 'assets/lottie/user_profile.json',
     ),
     Session(
       id: '2',
@@ -61,7 +61,7 @@ class MockData {
       status: 'Upcoming',
       category: 'In class Q&A',
       instructorName: 'Prof. Johnson',
-      instructorAvatar: 'assets/avatars/student.png',
+      instructorAvatar: 'assets/lottie/user_profile.json',
     ),
     Session(
       id: '3',
@@ -72,7 +72,7 @@ class MockData {
       status: 'Upcoming',
       category: 'After Hour Session',
       instructorName: 'Mr. Brown',
-      instructorAvatar: 'assets/avatars/student.png',
+      instructorAvatar: 'assets/lottie/user_profile.json',
     ),
     Session(
       id: '4',
@@ -83,7 +83,7 @@ class MockData {
       status: 'Completed',
       category: 'In class Lecture',
       instructorName: 'Mrs. Davis',
-      instructorAvatar: 'assets/avatars/student.png',
+      instructorAvatar: 'assets/lottie/user_profile.json',
     ),
   ];
   

@@ -30,7 +30,7 @@ class DaySelector extends StatelessWidget {
             onTap: () => provider.selectDate(date),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOutBack,
+              curve: Curves.easeOut,
               width: 60,
               decoration: BoxDecoration(
                 color: isSelected ? AppColors.primaryYellow : Colors.transparent,
@@ -39,15 +39,20 @@ class DaySelector extends StatelessWidget {
                   color: isSelected ? Colors.transparent : Colors.grey.shade300,
                   width: 1,
                 ),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: AppColors.primaryYellow.withOpacity(0.4),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        )
-                      ]
-                    : [],
+                boxShadow: [
+                  if (isSelected)
+                    BoxShadow(
+                      color: AppColors.primaryYellow.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    )
+                  else
+                    const BoxShadow(
+                      color: Colors.transparent,
+                      blurRadius: 0,
+                      offset: Offset.zero,
+                    ),
+                ],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

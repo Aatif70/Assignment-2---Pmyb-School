@@ -13,37 +13,81 @@ import '../widgets/button_capsule.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/subject_carousel.dart';
 import '../../core/utils/mock_data.dart';
+import 'performance_page.dart';
+import 'leaderboard_page.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
   @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> with SingleTickerProviderStateMixin {
+  late PageController _pageController;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(viewportFraction: 0.9);
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeAnimation = CurvedAnimation(parent: _fadeController, curve: Curves.easeOut);
+    _fadeController.forward();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _fadeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Sync PageController with Provider
+    final provider = Provider.of<DashboardProvider>(context);
+    if (_pageController.hasClients && 
+        (_pageController.page?.round() ?? 0) != provider.selectedSessionIndex) {
+      _pageController.animateToPage(
+        provider.selectedSessionIndex,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOutCubic,
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.softCream,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const TopAppBar(),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Consumer<DashboardProvider>(
-                  builder: (context, provider, child) {
-                    // Check for Tablet Portrait or Mobile
-                    bool isTabletPortrait = Responsive.isTablet(context) && 
-                        MediaQuery.of(context).orientation == Orientation.portrait;
-                    
-                    if (Responsive.isMobile(context) || isTabletPortrait) {
-                      return _buildPortraitLayout(context, provider);
-                    } else {
-                      return _buildLandscapeLayout(context, provider);
-                    }
-                  },
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SafeArea(
+          child: Column(
+            children: [
+              const TopAppBar(),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Consumer<DashboardProvider>(
+                    builder: (context, provider, child) {
+                      // Check for Tablet Portrait or Mobile
+                      bool isTabletPortrait = Responsive.isTablet(context) && 
+                          MediaQuery.of(context).orientation == Orientation.portrait;
+                      
+                      if (Responsive.isMobile(context) || isTabletPortrait) {
+                        return _buildPortraitLayout(context, provider);
+                      } else {
+                        return _buildLandscapeLayout(context, provider);
+                      }
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -53,66 +97,19 @@ class DashboardPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. Profile Card ("Hi Arav")
         ProfileCard(student: MockData.student),
         const SizedBox(height: 24),
-        
-        // 2. Day Selector
         const DaySelector(),
         const SizedBox(height: 24),
-        
-        // 3. Current Period Swipeable Cards
         _buildSessionPageView(provider),
         const SizedBox(height: 24),
-        
-        // 4. Time Slot Cards
         _buildTimeSlots(provider),
         const SizedBox(height: 24),
-        
-        // 5. Upcoming Classes Card (Subject Carousel)
         SubjectCarousel(sessions: provider.sessions),
         const SizedBox(height: 24),
-        
-        // 6. Student Performance and Leaderboard Options
-        Row(
-          children: [
-            Expanded(
-              child: ButtonCapsule(
-                text: 'Performance',
-                icon: Icons.show_chart,
-                isSelected: provider.selectedTab == 'Performance',
-                onTap: () => provider.selectTab('Performance'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ButtonCapsule(
-                text: 'Leaderboard',
-                icon: Icons.leaderboard,
-                isSelected: provider.selectedTab == 'Leaderboard',
-                onTap: () => provider.selectTab('Leaderboard'),
-              ),
-            ),
-          ],
-        ),
+        _buildActionButtons(context, provider),
         const SizedBox(height: 24),
-        
-        // 7. Attendance and Performance
-        StatCard(
-          title: 'Attendance',
-          subtitle: 'Overall Attendance',
-          value: MockData.student.attendance,
-          icon: Icons.calendar_today,
-          iconColor: Colors.grey.shade700,
-        ),
-        const SizedBox(height: 12),
-        StatCard(
-          title: 'Performance',
-          subtitle: 'This week',
-          value: MockData.student.performance,
-          icon: Icons.trending_up,
-          iconColor: Colors.grey.shade700,
-        ),
+        _buildStats(),
       ],
     );
   }
@@ -121,7 +118,6 @@ class DashboardPage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left Column (65%)
         Expanded(
           flex: 65,
           child: Column(
@@ -136,50 +132,15 @@ class DashboardPage extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 32),
-        // Right Column (35%)
         Expanded(
           flex: 35,
           child: Column(
             children: [
               ProfileCard(student: MockData.student),
               const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: ButtonCapsule(
-                      text: 'Performance',
-                      icon: Icons.show_chart,
-                      isSelected: provider.selectedTab == 'Performance',
-                      onTap: () => provider.selectTab('Performance'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ButtonCapsule(
-                      text: 'Leaderboard',
-                      icon: Icons.leaderboard,
-                      isSelected: provider.selectedTab == 'Leaderboard',
-                      onTap: () => provider.selectTab('Leaderboard'),
-                    ),
-                  ),
-                ],
-              ),
+              _buildActionButtons(context, provider),
               const SizedBox(height: 24),
-              StatCard(
-                title: 'Attendance',
-                subtitle: 'Overall Attendance',
-                value: MockData.student.attendance,
-                icon: Icons.calendar_today,
-                iconColor: Colors.grey.shade700,
-              ),
-              const SizedBox(height: 12),
-              StatCard(
-                title: 'Performance',
-                subtitle: 'This week',
-                value: MockData.student.performance,
-                icon: Icons.trending_up,
-                iconColor: Colors.grey.shade700,
-              ),
+              _buildStats(),
               const SizedBox(height: 24),
               SubjectCarousel(sessions: provider.sessions),
             ],
@@ -193,11 +154,29 @@ class DashboardPage extends StatelessWidget {
     return SizedBox(
       height: 320,
       child: PageView.builder(
+        controller: _pageController,
         onPageChanged: (index) => provider.selectSession(index),
         itemCount: provider.sessions.length,
         itemBuilder: (context, index) {
           final session = provider.sessions[index];
-          return SessionCard(session: session);
+          return AnimatedBuilder(
+            animation: _pageController,
+            builder: (context, child) {
+              double value = 1.0;
+              if (_pageController.position.haveDimensions) {
+                value = _pageController.page! - index;
+                value = (1 - (value.abs() * 0.1)).clamp(0.9, 1.0);
+              }
+              return Transform.scale(
+                scale: value,
+                child: Opacity(
+                  opacity: value,
+                  child: child,
+                ),
+              );
+            },
+            child: SessionCard(session: session),
+          );
         },
       ),
     );
@@ -220,6 +199,64 @@ class DashboardPage extends StatelessWidget {
           );
         }).toList(),
       ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context, DashboardProvider provider) {
+    return Row(
+      children: [
+        Expanded(
+          child: ButtonCapsule(
+            text: 'Performance',
+            icon: Icons.show_chart,
+            isSelected: provider.selectedTab == 'Performance',
+            onTap: () {
+              provider.selectTab('Performance');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PerformancePage()),
+              );
+            },
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: ButtonCapsule(
+            text: 'Leaderboard',
+            icon: Icons.leaderboard,
+            isSelected: provider.selectedTab == 'Leaderboard',
+            onTap: () {
+              provider.selectTab('Leaderboard');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LeaderboardPage()),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStats() {
+    return Column(
+      children: [
+        StatCard(
+          title: 'Attendance',
+          subtitle: 'Overall Attendance',
+          value: MockData.student.attendance,
+          icon: Icons.calendar_today,
+          iconColor: Colors.grey.shade700,
+        ),
+        const SizedBox(height: 12),
+        StatCard(
+          title: 'Performance',
+          subtitle: 'This week',
+          value: MockData.student.performance,
+          icon: Icons.trending_up,
+          iconColor: Colors.grey.shade700,
+        ),
+      ],
     );
   }
 }

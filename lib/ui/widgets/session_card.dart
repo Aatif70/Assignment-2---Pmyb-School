@@ -150,10 +150,19 @@ class SessionCard extends StatelessWidget {
           Positioned(
             right: 24,
             bottom: 80,
-            child: CircleAvatar(
-              radius: 20,
-              backgroundImage: AssetImage(session.instructorAvatar),
-              backgroundColor: Colors.grey.shade300,
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey.shade100,
+              ),
+              child: ClipOval(
+                child: Lottie.asset(
+                  session.instructorAvatar,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
         ],
