@@ -13,7 +13,12 @@ A Flutter application designed for students to manage their classes, track perfo
 
 ## Screenshots
 
-*(Add screenshots here)*
+The app was built primarily for the tablet landscape view. Below are screenshots taken on an iPad in both landscape and portrait modes.
+
+<p float="left">
+  <img src="Landscape.png" width="600" alt="Landscape View" />
+  <img src="Portrait.png" width="300" alt="Portrait View" /> 
+</p>
 
 ## How to Run
 
@@ -42,4 +47,4 @@ A Flutter application designed for students to manage their classes, track perfo
 
 ## APK
 
-*(Add APK link here)*
+*()*
