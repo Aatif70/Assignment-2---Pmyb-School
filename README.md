@@ -1,16 +1,45 @@
-# sch_pmyb
+# School Learning App
 
-A new Flutter project.
+A Flutter application designed for students to manage their classes, track performance, and compete on leaderboards.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Dashboard**: A central hub showing daily schedule, live classes, and quick stats.
+- **Live Classes**: Real-time status of ongoing and upcoming classes with countdowns.
+- **Performance Tracking**: Visual charts and badges to track academic progress.
+- **Leaderboard**: A competitive view to see student rankings and compare scores.
+- **Interactive UI**: Staggered animations, glassmorphism effects, and interactive cards.
+- **State Management**: Uses `Provider` for efficient state management.
 
-A few resources to get you started if this is your first Flutter project:
+## Screenshots
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+*(Add screenshots here)*
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## How to Run
+
+1.  **Prerequisites**: Ensure you have Flutter installed and set up on your machine.
+2.  **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd school_app
+    ```
+3.  **Install dependencies**:
+    ```bash
+    flutter pub get
+    ```
+4.  **Run the app**:
+    ```bash
+    flutter run
+    ```
+
+## Packages Used
+
+-   [provider](https://pub.dev/packages/provider): State management.
+-   [lottie](https://pub.dev/packages/lottie): High-quality animations.
+-   [google_fonts](https://pub.dev/packages/google_fonts): Custom typography.
+-   [flutter_svg](https://pub.dev/packages/flutter_svg): SVG rendering.
+-   [intl](https://pub.dev/packages/intl): Date and time formatting.
+
+## APK
+
+*(Add APK link here)*

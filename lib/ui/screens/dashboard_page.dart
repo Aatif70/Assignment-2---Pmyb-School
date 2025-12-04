@@ -95,23 +95,48 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
   }
 
   Widget _buildPortraitLayout(BuildContext context, DashboardProvider provider) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ProfileCard(student: MockData.student),
-        const SizedBox(height: 24),
-        const DaySelector(),
-        const SizedBox(height: 24),
-        _buildSessionPageView(provider),
-        const SizedBox(height: 24),
-        _buildTimeSlots(provider),
-        const SizedBox(height: 24),
-        SubjectCarousel(sessions: provider.sessions),
-        const SizedBox(height: 24),
-        _buildActionButtons(context, provider),
-        const SizedBox(height: 24),
-        _buildStats(),
-      ],
+    return AnimatedBuilder(
+      animation: _fadeController,
+      builder: (context, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildAnimatedItem(0, ProfileCard(student: MockData.student)),
+            const SizedBox(height: 24),
+            _buildAnimatedItem(1, const DaySelector()),
+            const SizedBox(height: 24),
+            _buildAnimatedItem(2, _buildSessionPageView(provider)),
+            const SizedBox(height: 24),
+            _buildAnimatedItem(3, _buildTimeSlots(provider)),
+            const SizedBox(height: 24),
+            _buildAnimatedItem(4, SubjectCarousel(sessions: provider.sessions)),
+            const SizedBox(height: 24),
+            _buildAnimatedItem(5, _buildActionButtons(context, provider)),
+            const SizedBox(height: 24),
+            _buildAnimatedItem(6, _buildStats()),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildAnimatedItem(int index, Widget child) {
+    final start = index * 0.1;
+    final end = start + 0.4;
+    final animation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Interval(start.clamp(0.0, 1.0), end.clamp(0.0, 1.0), curve: Curves.easeOut),
+    );
+
+    return FadeTransition(
+      opacity: animation,
+      child: SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 0.1),
+          end: Offset.zero,
+        ).animate(animation),
+        child: child,
+      ),
     );
   }
 
