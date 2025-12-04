@@ -30,10 +30,14 @@ class DashboardPage extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 child: Consumer<DashboardProvider>(
                   builder: (context, provider, child) {
-                    if (Responsive.isMobile(context)) {
-                      return _buildMobileLayout(context, provider);
+                    // Check for Tablet Portrait or Mobile
+                    bool isTabletPortrait = Responsive.isTablet(context) && 
+                        MediaQuery.of(context).orientation == Orientation.portrait;
+                    
+                    if (Responsive.isMobile(context) || isTabletPortrait) {
+                      return _buildPortraitLayout(context, provider);
                     } else {
-                      return _buildTabletLayout(context, provider);
+                      return _buildLandscapeLayout(context, provider);
                     }
                   },
                 ),
@@ -45,88 +49,31 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context, DashboardProvider provider) {
+  Widget _buildPortraitLayout(BuildContext context, DashboardProvider provider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const DaySelector(),
-        const SizedBox(height: 24),
-        _buildMainSection(context, provider),
-        const SizedBox(height: 24),
-        _buildRightPanel(context, provider),
-      ],
-    );
-  }
-
-  Widget _buildTabletLayout(BuildContext context, DashboardProvider provider) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Left Column (65%)
-        Expanded(
-          flex: 65,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const DaySelector(),
-              const SizedBox(height: 32),
-              _buildMainSection(context, provider),
-            ],
-          ),
-        ),
-        const SizedBox(width: 32),
-        // Right Column (35%)
-        Expanded(
-          flex: 35,
-          child: _buildRightPanel(context, provider),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMainSection(BuildContext context, DashboardProvider provider) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 320, // Fixed height for the card area
-          child: PageView.builder(
-            onPageChanged: (index) => provider.selectSession(index),
-            itemCount: provider.sessions.length,
-            itemBuilder: (context, index) {
-              final session = provider.sessions[index];
-              // Simple scale animation could be added here with a custom PageView builder
-              return SessionCard(session: session);
-            },
-          ),
-        ),
-        const SizedBox(height: 24),
-        // Time Slots
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: provider.sessions.asMap().entries.map((entry) {
-              final index = entry.key;
-              final session = entry.value;
-              return Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: TimeChip(
-                  time: session.startTime,
-                  isSelected: index == provider.selectedSessionIndex,
-                  onTap: () => provider.selectSession(index),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRightPanel(BuildContext context, DashboardProvider provider) {
-    return Column(
-      children: [
+        // 1. Profile Card ("Hi Arav")
         ProfileCard(student: MockData.student),
         const SizedBox(height: 24),
+        
+        // 2. Day Selector
+        const DaySelector(),
+        const SizedBox(height: 24),
+        
+        // 3. Current Period Swipeable Cards
+        _buildSessionPageView(provider),
+        const SizedBox(height: 24),
+        
+        // 4. Time Slot Cards
+        _buildTimeSlots(provider),
+        const SizedBox(height: 24),
+        
+        // 5. Upcoming Classes Card (Subject Carousel)
+        SubjectCarousel(sessions: provider.sessions),
+        const SizedBox(height: 24),
+        
+        // 6. Student Performance and Leaderboard Options
         Row(
           children: [
             Expanded(
@@ -149,6 +96,8 @@ class DashboardPage extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 24),
+        
+        // 7. Attendance and Performance
         StatCard(
           title: 'Attendance',
           subtitle: 'Overall Attendance',
@@ -164,9 +113,113 @@ class DashboardPage extends StatelessWidget {
           icon: Icons.trending_up,
           iconColor: Colors.grey.shade700,
         ),
-        const SizedBox(height: 24),
-        SubjectCarousel(sessions: provider.sessions),
       ],
+    );
+  }
+
+  Widget _buildLandscapeLayout(BuildContext context, DashboardProvider provider) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Left Column (65%)
+        Expanded(
+          flex: 65,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const DaySelector(),
+              const SizedBox(height: 32),
+              _buildSessionPageView(provider),
+              const SizedBox(height: 24),
+              _buildTimeSlots(provider),
+            ],
+          ),
+        ),
+        const SizedBox(width: 32),
+        // Right Column (35%)
+        Expanded(
+          flex: 35,
+          child: Column(
+            children: [
+              ProfileCard(student: MockData.student),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: ButtonCapsule(
+                      text: 'Performance',
+                      icon: Icons.show_chart,
+                      isSelected: provider.selectedTab == 'Performance',
+                      onTap: () => provider.selectTab('Performance'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ButtonCapsule(
+                      text: 'Leaderboard',
+                      icon: Icons.leaderboard,
+                      isSelected: provider.selectedTab == 'Leaderboard',
+                      onTap: () => provider.selectTab('Leaderboard'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              StatCard(
+                title: 'Attendance',
+                subtitle: 'Overall Attendance',
+                value: MockData.student.attendance,
+                icon: Icons.calendar_today,
+                iconColor: Colors.grey.shade700,
+              ),
+              const SizedBox(height: 12),
+              StatCard(
+                title: 'Performance',
+                subtitle: 'This week',
+                value: MockData.student.performance,
+                icon: Icons.trending_up,
+                iconColor: Colors.grey.shade700,
+              ),
+              const SizedBox(height: 24),
+              SubjectCarousel(sessions: provider.sessions),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSessionPageView(DashboardProvider provider) {
+    return SizedBox(
+      height: 320,
+      child: PageView.builder(
+        onPageChanged: (index) => provider.selectSession(index),
+        itemCount: provider.sessions.length,
+        itemBuilder: (context, index) {
+          final session = provider.sessions[index];
+          return SessionCard(session: session);
+        },
+      ),
+    );
+  }
+
+  Widget _buildTimeSlots(DashboardProvider provider) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: provider.sessions.asMap().entries.map((entry) {
+          final index = entry.key;
+          final session = entry.value;
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: TimeChip(
+              time: session.startTime,
+              isSelected: index == provider.selectedSessionIndex,
+              onTap: () => provider.selectSession(index),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }
