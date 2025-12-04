@@ -9,122 +9,154 @@ class PerformancePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.softCream,
-      appBar: AppBar(
-        title: Text('Performance', style: AppTextStyles.heading2),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.darkText),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildOverallScore(),
-            const SizedBox(height: 32),
-            Text('Subject Breakdown', style: AppTextStyles.heading3),
-            const SizedBox(height: 16),
-            ...MockData.performanceStats.map((stat) => _buildSubjectStat(stat)),
-          ],
-        ),
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 200,
+            pinned: true,
+            backgroundColor: AppColors.primaryOrange,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.primaryOrange, Colors.orange.shade300],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 40),
+                      Text(
+                        '${(MockData.student.performance * 100).toInt()}%',
+                        style: AppTextStyles.heading1.copyWith(
+                          color: Colors.white,
+                          fontSize: 64,
+                        ),
+                      ),
+                      Text(
+                        'Overall Score',
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: Text('Performance', style: AppTextStyles.heading2.copyWith(color: Colors.white)),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Weekly Activity', style: AppTextStyles.heading3),
+                  const SizedBox(height: 16),
+                  _buildMinimalChart(),
+                  const SizedBox(height: 32),
+                  Text('Achievements', style: AppTextStyles.heading3),
+                  const SizedBox(height: 16),
+                  _buildBadgesGrid(),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildOverallScore() {
+  Widget _buildMinimalChart() {
     return Container(
-      padding: const EdgeInsets.all(24),
+      height: 180,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.softCream,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Overall Score', style: AppTextStyles.bodyMedium),
-                const SizedBox(height: 8),
-                Text(
-                  '${(MockData.student.performance * 100).toInt()}%',
-                  style: AppTextStyles.heading1.copyWith(color: AppColors.primaryOrange),
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: MockData.weeklyActivity.map((day) {
+          final height = (day['hours'] as double) / 5.0 * 100;
+          final isToday = day['day'] == 'Wed'; // Mock today
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                width: 8,
+                height: height,
+                decoration: BoxDecoration(
+                  color: isToday ? AppColors.primaryOrange : Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Great job! You are doing better than 85% of your class.',
-                  style: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                day['day'][0], // First letter only
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: isToday ? AppColors.primaryOrange : Colors.grey,
+                  fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 24),
-          SizedBox(
-            height: 100,
-            width: 100,
-            child: CircularProgressIndicator(
-              value: MockData.student.performance,
-              strokeWidth: 12,
-              backgroundColor: Colors.grey.shade100,
-              color: AppColors.primaryOrange,
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        }).toList(),
       ),
     );
   }
 
-  Widget _buildSubjectStat(Map<String, dynamic> stat) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+  Widget _buildBadgesGrid() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 1.5,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(stat['subject'], style: AppTextStyles.heading3),
-              Text(
-                '${stat['score']}/${stat['total']}',
-                style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+      itemCount: MockData.earnedBadges.length,
+      itemBuilder: (context, index) {
+        final badge = MockData.earnedBadges[index];
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.grey.shade100),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.02),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: stat['score'] / stat['total'],
-              minHeight: 8,
-              backgroundColor: Colors.grey.shade100,
-              color: stat['color'],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(badge['icon'], color: badge['color'], size: 32),
+              const SizedBox(height: 8),
+              Text(
+                badge['name'],
+                style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

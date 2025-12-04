@@ -4,8 +4,14 @@ import '../../core/theme/colors.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/utils/mock_data.dart';
 
-class LeaderboardPage extends StatelessWidget {
+class LeaderboardPage extends StatefulWidget {
   const LeaderboardPage({super.key});
+
+  @override
+  State<LeaderboardPage> createState() => _LeaderboardPageState();
+}
+
+class _LeaderboardPageState extends State<LeaderboardPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +21,10 @@ class LeaderboardPage extends StatelessWidget {
 
     final topThree = sortedLeaderboard.take(3).toList();
     final rest = sortedLeaderboard.skip(3).toList();
+    
+    // Find rival (person just above current user)
+    final currentUserIndex = sortedLeaderboard.indexWhere((s) => s['name'] == 'Aatif');
+    final rival = currentUserIndex > 0 ? sortedLeaderboard[currentUserIndex - 1] : null;
 
     return Scaffold(
       backgroundColor: AppColors.softCream,
@@ -29,9 +39,9 @@ class LeaderboardPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           _buildTopThree(topThree),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
@@ -56,6 +66,55 @@ class LeaderboardPage extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildRivalCard(Map<String, dynamic> rival) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.primaryOrange, AppColors.primaryOrange.withOpacity(0.8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryOrange.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 24,
+            child: Lottie.asset(rival['avatar'], width: 40),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Beat your rival!',
+                  style: AppTextStyles.bodySmall.copyWith(color: Colors.white70),
+                ),
+                Text(
+                  '${rival['points'] - 2350} pts to pass ${rival['name']}', // Hardcoded user points for demo
+                  style: AppTextStyles.heading3.copyWith(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.arrow_forward_ios, color: Colors.white),
         ],
       ),
     );
@@ -122,13 +181,38 @@ class LeaderboardPage extends StatelessWidget {
   }
 
   Widget _buildRankItem(Map<String, dynamic> student) {
+    IconData changeIcon;
+    Color changeColor;
+    
+    switch (student['change']) {
+      case 'up':
+        changeIcon = Icons.arrow_drop_up;
+        changeColor = Colors.green;
+        break;
+      case 'down':
+        changeIcon = Icons.arrow_drop_down;
+        changeColor = Colors.red;
+        break;
+      default:
+        changeIcon = Icons.remove;
+        changeColor = Colors.grey;
+    }
+
     return Row(
       children: [
-        Text(
-          '#${student['rank']}',
-          style: AppTextStyles.heading3.copyWith(color: Colors.grey),
+        SizedBox(
+          width: 40,
+          child: Column(
+            children: [
+              Text(
+                '#${student['rank']}',
+                style: AppTextStyles.heading3.copyWith(color: Colors.grey),
+              ),
+              Icon(changeIcon, color: changeColor, size: 20),
+            ],
+          ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 12),
         CircleAvatar(
           radius: 24,
           backgroundColor: Colors.grey.shade100,

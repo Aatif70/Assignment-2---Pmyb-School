@@ -306,7 +306,8 @@ class TopAppBar extends StatelessWidget {
                   children: [
                     const Icon(Icons.search, color: Colors.grey),
                     const SizedBox(width: 8),
-                    Text('Search...', style: AppTextStyles.bodyMedium),
+                    Expanded(child: Text('Ask anything!', style: AppTextStyles.bodyMedium)),
+                    const Icon(Icons.mic, color: AppColors.primaryOrange),
                   ],
                 ),
               ),

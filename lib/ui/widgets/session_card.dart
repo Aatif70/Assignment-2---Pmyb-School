@@ -76,10 +76,19 @@ class SessionCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Text(
-                      '${session.endTime.difference(session.startTime).inMinutes} Mins',
-                      style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold),
-                    ),
+                    if (session.status == 'Live Now')
+                      Text(
+                        'Ends in ${session.endTime.difference(DateTime.now()).inMinutes} Mins',
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      )
+                    else
+                      Text(
+                        '${session.endTime.difference(session.startTime).inMinutes} Mins',
+                        style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold),
+                      ),
                   ],
                 ),
                 

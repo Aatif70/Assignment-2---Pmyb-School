@@ -92,17 +92,67 @@ class MockData {
   }
 
   static final List<Map<String, dynamic>> performanceStats = [
-    {'subject': 'Physics', 'score': 85, 'total': 100, 'color': AppColors.accentBlue},
-    {'subject': 'Chemistry', 'score': 92, 'total': 100, 'color': AppColors.accentPurple},
-    {'subject': 'Math', 'score': 78, 'total': 100, 'color': AppColors.accentGreen},
-    {'subject': 'Science', 'score': 88, 'total': 100, 'color': AppColors.primaryOrange},
+    {
+      'subject': 'Physics',
+      'score': 85,
+      'total': 100,
+      'color': AppColors.accentBlue,
+      'strengths': ['Mechanics', 'Thermodynamics'],
+      'improvements': ['Optics']
+    },
+    {
+      'subject': 'Chemistry',
+      'score': 92,
+      'total': 100,
+      'color': AppColors.accentPurple,
+      'strengths': ['Organic Chemistry', 'Bonding'],
+      'improvements': ['Stoichiometry']
+    },
+    {
+      'subject': 'Math',
+      'score': 78,
+      'total': 100,
+      'color': AppColors.accentGreen,
+      'strengths': ['Algebra', 'Geometry'],
+      'improvements': ['Calculus']
+    },
+    {
+      'subject': 'Science',
+      'score': 88,
+      'total': 100,
+      'color': AppColors.primaryOrange,
+      'strengths': ['Biology', 'Ecology'],
+      'improvements': ['Genetics']
+    },
+  ];
+
+  static final List<Map<String, dynamic>> weeklyActivity = [
+    {'day': 'Mon', 'hours': 2.5},
+    {'day': 'Tue', 'hours': 3.0},
+    {'day': 'Wed', 'hours': 1.5},
+    {'day': 'Thu', 'hours': 4.0},
+    {'day': 'Fri', 'hours': 2.0},
+    {'day': 'Sat', 'hours': 5.0},
+    {'day': 'Sun', 'hours': 3.5},
+  ];
+
+  static final List<Map<String, dynamic>> earnedBadges = [
+    {'name': 'Early Bird', 'icon': Icons.wb_sunny, 'color': Colors.orange},
+    {'name': 'Homework Hero', 'icon': Icons.assignment_turned_in, 'color': Colors.blue},
+    {'name': 'Math Whiz', 'icon': Icons.calculate, 'color': Colors.green},
+    {'name': 'Perfect Week', 'icon': Icons.calendar_today, 'color': Colors.purple},
   ];
 
   static final List<Map<String, dynamic>> leaderboard = [
-    {'rank': 1, 'name': 'Sarah M.', 'points': 2450, 'avatar': 'assets/lottie/user_profile.json'},
-    {'rank': 2, 'name': 'John D.', 'points': 2380, 'avatar': 'assets/lottie/user_profile.json'},
-    {'rank': 3, 'name': 'Aatif', 'points': 2350, 'avatar': 'assets/lottie/user_profile.json'}, // Current user
-    {'rank': 4, 'name': 'Emily R.', 'points': 2100, 'avatar': 'assets/lottie/user_profile.json'},
-    {'rank': 5, 'name': 'Michael B.', 'points': 1950, 'avatar': 'assets/lottie/user_profile.json'},
+    {'rank': 1, 'name': 'Aatif', 'points': 2500, 'avatar': 'assets/lottie/user_profile.json', 'change': 'up'}, // Current user
+    {'rank': 2, 'name': 'Sarah M.', 'points': 2450, 'avatar': 'assets/lottie/user_profile.json', 'change': 'down'},
+    {'rank': 3, 'name': 'John D.', 'points': 2380, 'avatar': 'assets/lottie/user_profile.json', 'change': 'down'},
+    {'rank': 4, 'name': 'Emily R.', 'points': 2100, 'avatar': 'assets/lottie/user_profile.json', 'change': 'up'},
+    {'rank': 5, 'name': 'Michael B.', 'points': 1950, 'avatar': 'assets/lottie/user_profile.json', 'change': 'down'},
+    {'rank': 6, 'name': 'Jessica T.', 'points': 1890, 'avatar': 'assets/lottie/user_profile.json', 'change': 'same'},
+    {'rank': 7, 'name': 'David K.', 'points': 1820, 'avatar': 'assets/lottie/user_profile.json', 'change': 'up'},
+    {'rank': 8, 'name': 'Olivia L.', 'points': 1750, 'avatar': 'assets/lottie/user_profile.json', 'change': 'down'},
+    {'rank': 9, 'name': 'Daniel P.', 'points': 1680, 'avatar': 'assets/lottie/user_profile.json', 'change': 'same'},
+    {'rank': 10, 'name': 'Sophia H.', 'points': 1600, 'avatar': 'assets/lottie/user_profile.json', 'change': 'up'},
   ];
 }
