@@ -209,9 +209,8 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
           child: ButtonCapsule(
             text: 'Performance',
             icon: Icons.show_chart,
-            isSelected: provider.selectedTab == 'Performance',
+            isSelected: false,
             onTap: () {
-              provider.selectTab('Performance');
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const PerformancePage()),
@@ -224,9 +223,8 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
           child: ButtonCapsule(
             text: 'Leaderboard',
             icon: Icons.leaderboard,
-            isSelected: provider.selectedTab == 'Leaderboard',
+            isSelected: false,
             onTap: () {
-              provider.selectTab('Leaderboard');
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const LeaderboardPage()),

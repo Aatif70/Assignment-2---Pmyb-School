@@ -90,4 +90,19 @@ class MockData {
   static Subject getSubject(String id) {
     return subjects.firstWhere((s) => s.id == id, orElse: () => subjects[0]);
   }
+
+  static final List<Map<String, dynamic>> performanceStats = [
+    {'subject': 'Physics', 'score': 85, 'total': 100, 'color': AppColors.accentBlue},
+    {'subject': 'Chemistry', 'score': 92, 'total': 100, 'color': AppColors.accentPurple},
+    {'subject': 'Math', 'score': 78, 'total': 100, 'color': AppColors.accentGreen},
+    {'subject': 'Science', 'score': 88, 'total': 100, 'color': AppColors.primaryOrange},
+  ];
+
+  static final List<Map<String, dynamic>> leaderboard = [
+    {'rank': 1, 'name': 'Sarah M.', 'points': 2450, 'avatar': 'assets/lottie/user_profile.json'},
+    {'rank': 2, 'name': 'John D.', 'points': 2380, 'avatar': 'assets/lottie/user_profile.json'},
+    {'rank': 3, 'name': 'Aatif', 'points': 2350, 'avatar': 'assets/lottie/user_profile.json'}, // Current user
+    {'rank': 4, 'name': 'Emily R.', 'points': 2100, 'avatar': 'assets/lottie/user_profile.json'},
+    {'rank': 5, 'name': 'Michael B.', 'points': 1950, 'avatar': 'assets/lottie/user_profile.json'},
+  ];
 }
